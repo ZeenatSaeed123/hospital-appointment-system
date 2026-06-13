@@ -135,103 +135,85 @@ function validateEmail(inputId, errorId) {
 }
 
 // --- LOGIN PAGE LOGIC ---
-function initLoginPage() {
-  const form = document.getElementById("loginForm");
-  if (!form) return;
+function handleLogin(e) {
+  e.preventDefault();
+  
+  let isEmailValid = validateEmail("email", "emailError");
+  let isPassValid = validateNotEmpty("password", "passError", "Password is required.");
+  if (!isEmailValid || !isPassValid) return;
 
-  const roleBtns = document.querySelectorAll(".role-btn");
-  roleBtns.forEach(function(btn) {
-    btn.addEventListener("click", function() {
-      roleBtns.forEach(function(b) { b.classList.remove("selected"); });
-      btn.classList.add("selected");
-    });
-  });
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    let isEmailValid = validateEmail("email", "emailError");
-    let isPassValid = validateNotEmpty("password", "passError", "Password is required.");
-    if (!isEmailValid || !isPassValid) return;
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const users = getData("users");
-    
-    let matchedUser = null;
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].email === email && users[i].password === password) {
-        matchedUser = users[i];
-        break;
-      }
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const users = getData("users");
+  
+  let matchedUser = null;
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].email === email && users[i].password === password) {
+      matchedUser = users[i];
+      break;
     }
+  }
 
-    if (matchedUser === null) {
-      showAlert("Invalid email or password. Please try again.", "error");
-      return;
-    }
-    
-    setSession(matchedUser);
-    redirectByRole(matchedUser);
-  });
+  if (matchedUser === null) {
+    showAlert("Invalid email or password. Please try again.", "error");
+    return;
+  }
+  
+  setSession(matchedUser);
+  redirectByRole(matchedUser);
 }
 
 // --- REGISTER PAGE LOGIC ---
-function initRegisterPage() {
-  const form = document.getElementById("registerForm");
-  if (!form) return;
+function handleRegister(e) {
+  e.preventDefault();
+  
+  let v1 = validateNotEmpty("regName", "nameError", "Full name is required.");
+  let v2 = validateEmail("regEmail", "regEmailError");
+  let v3 = validateNotEmpty("regPass", "regPassError", "Password is required.");
+  if (!v1 || !v2 || !v3) return;
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    let v1 = validateNotEmpty("regName", "nameError", "Full name is required.");
-    let v2 = validateEmail("regEmail", "regEmailError");
-    let v3 = validateNotEmpty("regPass", "regPassError", "Password is required.");
-    if (!v1 || !v2 || !v3) return;
+  const pass = document.getElementById("regPass").value;
+  const confirm = document.getElementById("regConfirm").value;
+  
+  if (pass !== confirm) {
+    document.getElementById("regConfirm").classList.add("error");
+    document.getElementById("confirmError").textContent = "Passwords do not match.";
+    document.getElementById("confirmError").classList.add("show");
+    return;
+  } else {
+    document.getElementById("regConfirm").classList.remove("error");
+    document.getElementById("confirmError").classList.remove("show");
+  }
 
-    const pass = document.getElementById("regPass").value;
-    const confirm = document.getElementById("regConfirm").value;
-    
-    if (pass !== confirm) {
-      document.getElementById("regConfirm").classList.add("error");
-      document.getElementById("confirmError").textContent = "Passwords do not match.";
-      document.getElementById("confirmError").classList.add("show");
-      return;
-    } else {
-      document.getElementById("regConfirm").classList.remove("error");
-      document.getElementById("confirmError").classList.remove("show");
+  const email = document.getElementById("regEmail").value.trim();
+  const users = getData("users");
+  
+  let emailExists = false;
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].email === email) {
+      emailExists = true;
+      break;
     }
+  }
 
-    const email = document.getElementById("regEmail").value.trim();
-    const users = getData("users");
-    
-    let emailExists = false;
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].email === email) {
-        emailExists = true;
-        break;
-      }
-    }
+  if (emailExists) {
+    showAlert("This email is already registered.", "error");
+    return;
+  }
 
-    if (emailExists) {
-      showAlert("This email is already registered.", "error");
-      return;
-    }
-
-    const newUser = {
-      id: Date.now(),
-      name: document.getElementById("regName").value.trim(),
-      email: email,
-      password: pass,
-      role: "patient",
-      phone: document.getElementById("regPhone").value.trim() || ""
-    };
-    
-    users.push(newUser);
-    setData("users", users);
-    showAlert("Account created! Redirecting to login...", "success");
-    setTimeout(function() { window.location.href = "login.html"; }, 1800);
-  });
+  const newUser = {
+    id: Date.now(),
+    name: document.getElementById("regName").value.trim(),
+    email: email,
+    password: pass,
+    role: "patient",
+    phone: document.getElementById("regPhone").value.trim() || ""
+  };
+  
+  users.push(newUser);
+  setData("users", users);
+  showAlert("Account created! Redirecting to login...", "success");
+  setTimeout(function() { window.location.href = "login.html"; }, 1800);
 }
 
 // --- PATIENT DASHBOARD LOGIC ---
@@ -331,9 +313,6 @@ function cancelAppointment(id) {
 function initDoctorsPage() {
   requireRole("patient");
   renderDoctors(DOCTORS);
-
-  document.getElementById("searchInput").addEventListener("input", filterDoctors);
-  document.getElementById("specialtyFilter").addEventListener("change", filterDoctors);
 }
 
 function renderDoctors(list) {
@@ -665,20 +644,4 @@ function logout() {
   window.location.href = "login.html";
 }
 
-// --- GLOBAL PAGE ROUTER ---
-document.addEventListener("DOMContentLoaded", function() {
-  const page = window.location.pathname.split("/").pop();
-  if (page === "login.html" || page === "") {
-    initLoginPage();
-  } else if (page === "register.html") {
-    initRegisterPage();
-  } else if (page === "dashboard.html") {
-    initDashboard();
-  } else if (page === "doctors.html") {
-    initDoctorsPage();
-  } else if (page === "admin.html") {
-    initAdminPage();
-  } else if (page === "doctor.html") {
-    initDoctorPage();
-  }
-});
+// --- GLOBAL PAGE ROUTER REMOVED (using body onload / form onsubmit in HTML) ---

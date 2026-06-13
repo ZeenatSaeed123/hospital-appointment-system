@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body>
+<body onload="initDoctorsPage()">
 
 <nav class="navbar">
   <div class="logo">
@@ -30,8 +30,8 @@
   <div class="section">
 
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="  Search by doctor name or specialty..."/>
-      <select id="specialtyFilter">
+      <input type="text" id="searchInput" placeholder="  Search by doctor name or specialty..." oninput="filterDoctors()"/>
+      <select id="specialtyFilter" onchange="filterDoctors()">
         <option value="">All Specialties</option>
         <option>Cardiologist</option>
         <option>Neurologist</option>
