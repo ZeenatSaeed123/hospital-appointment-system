@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find Doctors — Hospital Appointment System</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">
+    <i class="fa-solid fa-hospital cross-icon"></i>
+    <span>Hospital <span>System</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="doctors.html" class="active">Find Doctors</a>
+    <button class="btn-nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Find a Doctor</h1>
+  <p>Browse our specialists and book an appointment in minutes.</p>
+</div>
+
+<div class="container">
+  <div class="section">
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="  Search by doctor name or specialty..."/>
+      <select id="specialtyFilter">
+        <option value="">All Specialties</option>
+        <option>Cardiologist</option>
+        <option>Neurologist</option>
+        <option>Dermatologist</option>
+        <option>Orthopedic</option>
+        <option>Pediatrician</option>
+        <option>General Physician</option>
+      </select>
+    </div>
+
+    <div class="card-grid" id="doctorsGrid">
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    
+    <h3> <div class="stat-icon blue"><i class="fa-solid fa-calendar-days"></i></div>Book Appointment</h3>
+    <p class="text-muted mb-2" id="modalDoctorName"></p>
+
+    <div id="bookingAlert" class="alert hidden"></div>
+
+    <input type="hidden" id="currentDoctorId"/>
+
+    <div class="form-group">
+      <label for="bookingDate">Select Date</label>
+      <input type="date" id="bookingDate"/>
+    </div>
+
+    <div class="form-group">
+      <label for="bookingTime">Select Time Slot</label>
+      <select id="bookingTime"></select>
+    </div>
+
+    <div class="form-group">
+      <label for="bookingNotes">Notes (optional)</label>
+      <input type="text" id="bookingNotes" placeholder="e.g. Follow-up visit, bring reports"/>
+    </div>
+
+    <button class="btn btn-success btn-block" onclick="confirmBooking()">Confirm Booking ✅</button>
+  </div>
+</div>
+
+<footer class="footer">
+  &copy; 2026 <span>Hospital Appointment System</span> — Built with HTML, CSS & JavaScript
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — Hospital Appointment System</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-box">
+
+    <div class="auth-logo">
+      <i class="fa-solid fa-hospital cross-icon"></i>
+      <h2>Create Account</h2>
+      <p>Register as a patient</p>
+    </div>
+
+    <div id="alertBox" class="alert hidden"></div>
+
+    <form id="registerForm" novalidate>
+      <div class="form-group">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" placeholder="Enter your full name"/>
+        <span class="error-msg" id="nameError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Email Address</label>
+        <input type="email" id="regEmail" placeholder="Enter your email"/>
+        <span class="error-msg" id="regEmailError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="regPhone">Phone Number (optional)</label>
+        <input type="text" id="regPhone" placeholder="e.g. 0300-1234567"/>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="regPass">Password</label>
+          <input type="password" id="regPass" placeholder="Create password"/>
+          <span class="error-msg" id="regPassError"></span>
+        </div>
+        <div class="form-group">
+          <label for="regConfirm">Confirm Password</label>
+          <input type="password" id="regConfirm" placeholder="Repeat password"/>
+          <span class="error-msg" id="confirmError"></span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a href="login.html">Sign in here</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

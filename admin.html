@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — Hospital Appointment System</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">
+    <i class="fa-solid fa-hospital cross-icon"></i>
+    <span>Hospital <span>Admin</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="admin.html" class="active">Dashboard</a>
+    <button class="btn-nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="page-header">
+<h1>Admin Panel</h1>
+<p>Manage all appointments, patients, and doctors from one place.</p>
+</div>
+
+<div class="container">
+  <div class="section">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+       <div class="stat-icon blue"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div>
+          <div class="stat-value" id="totalApptsStat">0</div>
+          <div class="stat-label">Total Appointments</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon teal"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+          <div class="stat-value" id="confirmedStat">0</div>
+          <div class="stat-label">Confirmed</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div>
+          <div class="stat-value" id="cancelledStat">0</div>
+          <div class="stat-label">Cancelled</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow"><i class="fa-solid fa-users"></i></div>
+        <div>
+          <div class="stat-value" id="totalPatientsStat">0</div>
+          <div class="stat-label">Registered Patients</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-between mb-2">
+      <div>
+        <div class="section-title">All Appointments</div>
+        <div class="section-subtitle">View every appointment in the system</div>
+      </div>
+    </div>
+
+    <div class="search-bar mb-2">
+      <input type="text" id="adminSearch" placeholder="  Search by patient or doctor name..." oninput="filterAdminTable()"/>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Doctor</th>
+            <th>Specialty</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-title mt-3 mb-2">Doctors in the System</div>
+    <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Sarah Ahmed</div><div class="doctor-specialty">Cardiologist</div><div class="doctor-info">Fee: Rs. 1500</div></div>
+      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Usman Ali</div><div class="doctor-specialty">Neurologist</div><div class="doctor-info">Fee: Rs. 2000</div></div>
+      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Ayesha Khan</div><div class="doctor-specialty">Dermatologist</div><div class="doctor-info">Fee: Rs. 1200</div></div>
+      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Bilal Raza</div><div class="doctor-specialty">Orthopedic</div><div class="doctor-info">Fee: Rs. 1800</div></div>
+      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Nadia Iqbal</div><div class="doctor-specialty">Pediatrician</div><div class="doctor-info">Fee: Rs. 1000</div></div>
+      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Kamran Sheikh</div><div class="doctor-specialty">General Physician</div><div class="doctor-info">Fee: Rs. 800</div></div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  &copy; 2026 <span>Hospital Appointment System</span> — Built with HTML, CSS & JavaScript
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
