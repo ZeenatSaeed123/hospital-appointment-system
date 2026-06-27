@@ -1,5 +1,5 @@
 // --- DOCTORS DATA ---
-const DOCTORS = [
+const DEFAULT_DOCTORS = [
   { id: 1, name: "Dr. Sarah Ahmed",    specialty: "Cardiologist",    fee: 1500, slots: ["09:00 AM","10:00 AM","11:00 AM","02:00 PM","03:00 PM"], bio: "15 years experience in heart disease." },
   { id: 2, name: "Dr. Usman Ali",      specialty: "Neurologist",     fee: 2000, slots: ["10:00 AM","11:30 AM","01:00 PM","04:00 PM"], bio: "Expert in brain and nervous system disorders." },
   { id: 3, name: "Dr. Ayesha Khan",    specialty: "Dermatologist",   fee: 1200, slots: ["09:30 AM","11:00 AM","02:30 PM","05:00 PM"], bio: "Specializes in skin conditions and treatments." },
@@ -7,6 +7,12 @@ const DOCTORS = [
   { id: 5, name: "Dr. Nadia Iqbal",    specialty: "Pediatrician",    fee: 1000, slots: ["09:00 AM","10:30 AM","01:00 PM","04:30 PM"], bio: "Caring for children from birth to adolescence." },
   { id: 6, name: "Dr. Kamran Sheikh",  specialty: "General Physician",fee: 800,  slots: ["08:30 AM","11:00 AM","02:00 PM","05:00 PM"], bio: "General health checkups and common illnesses." },
 ];
+
+let DOCTORS = JSON.parse(localStorage.getItem("doctors"));
+if (!DOCTORS || DOCTORS.length === 0) {
+  DOCTORS = DEFAULT_DOCTORS;
+  localStorage.setItem("doctors", JSON.stringify(DEFAULT_DOCTORS));
+}
 
 // --- STORAGE HELPER FUNCTIONS ---
 function getData(key) {
@@ -271,7 +277,7 @@ function renderMyAppointments(list) {
     if (appt.status === "Cancelled") { badgeClass = "cancelled"; }
 
     let actionButton = "";
-    if (appt.status !== "Cancelled") {
+    if (appt.status === "Confirmed") {
       actionButton = `<button class="btn btn-danger btn-sm" onclick="cancelAppointment(${appt.id})">Cancel</button>`;
     }
 
@@ -329,6 +335,7 @@ function renderDoctors(list) {
     const d = list[i];
     htmlContent += `
     <div class="doctor-card">
+      <div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div>
       <div class="doctor-info">
         <h3>${d.name}</h3>
         <p class="specialty">${d.specialty}</p>
@@ -496,6 +503,7 @@ function initDoctorPage() {
 
   let todayCount = 0;
   let totalConfirmed = 0;
+  let checkedCount = 0;
 
   for (let i = 0; i < doctorAppointments.length; i++) {
     const a = doctorAppointments[i];
@@ -505,12 +513,17 @@ function initDoctorPage() {
         todayCount++;
       }
     }
+    if (a.status === "Checked") {
+      checkedCount++;
+    }
   }
 
   const todayCountEl = document.getElementById("todayCount");
   const totalCountEl = document.getElementById("totalCount");
+  const checkedCountEl = document.getElementById("checkedCount");
   if (todayCountEl) todayCountEl.textContent = todayCount;
   if (totalCountEl) totalCountEl.textContent = totalConfirmed;
+  if (checkedCountEl) checkedCountEl.textContent = checkedCount;
 
   renderDoctorSchedule(doctorAppointments);
 }
@@ -520,7 +533,7 @@ function renderDoctorSchedule(list) {
   if (!tbody) return;
 
   if (list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:30px;">No appointments scheduled.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;">No appointments scheduled.</td></tr>`;
     return;
   }
 
@@ -529,16 +542,52 @@ function renderDoctorSchedule(list) {
     const a = list[i];
     let badgeClass = "cancelled";
     if (a.status === "Confirmed") { badgeClass = "confirmed"; }
+    if (a.status === "Checked") { badgeClass = "checked"; }
+
+    let actionButtons = "";
+    if (a.status === "Confirmed") {
+      actionButtons = `<button class="btn btn-success btn-sm" onclick="doctorMarkChecked(${a.id})">✓ Checked</button> <button class="btn btn-danger btn-sm" onclick="doctorCancelAppointment(${a.id})">Cancel</button>`;
+    } else {
+      actionButtons = `<span class="text-muted" style="font-size:0.83rem;">—</span>`;
+    }
 
     htmlContent += `
     <tr>
-      <td>${a.patientName}</td>
-      <td>${a.date}</td>
-      <td>${a.time}</td>
-      <td><span class="badge badge-${badgeClass}">${a.status}</span></td>
+      <td data-label="Patient">${a.patientName}</td>
+      <td data-label="Date">${a.date}</td>
+      <td data-label="Time">${a.time}</td>
+      <td data-label="Status"><span class="badge badge-${badgeClass}">${a.status}</span></td>
+      <td data-label="Action">${actionButtons}</td>
     </tr>`;
   }
   tbody.innerHTML = htmlContent;
+}
+
+function doctorMarkChecked(id) {
+  const appointments = getData("appointments");
+  for (let i = 0; i < appointments.length; i++) {
+    if (appointments[i].id === id) {
+      appointments[i].status = "Checked";
+      break;
+    }
+  }
+  setData("appointments", appointments);
+  showAlert("Appointment marked as checked.", "success");
+  setTimeout(function() { initDoctorPage(); }, 600);
+}
+
+function doctorCancelAppointment(id) {
+  if (!confirm("Are you sure you want to cancel this appointment?")) return;
+  const appointments = getData("appointments");
+  for (let i = 0; i < appointments.length; i++) {
+    if (appointments[i].id === id) {
+      appointments[i].status = "Cancelled";
+      break;
+    }
+  }
+  setData("appointments", appointments);
+  showAlert("Appointment cancelled.", "success");
+  setTimeout(function() { initDoctorPage(); }, 600);
 }
 
 // --- ADMIN PORTAL LOGIC ---
@@ -565,6 +614,8 @@ function initAdminPage() {
   document.getElementById("totalPatientsStat").textContent = patientCount;
 
   renderAdminTable(appointments);
+  renderAdminDoctors();
+  renderAdminPatients();
 }
 
 function renderAdminTable(list) {
@@ -572,7 +623,7 @@ function renderAdminTable(list) {
   if (!tbody) return;
   
   if (list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:#64748b;">No appointments found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#64748b;">No appointments found.</td></tr>`;
     return;
   }
 
@@ -597,6 +648,14 @@ function renderAdminTable(list) {
 
     let badgeClass = "cancelled";
     if (a.status === "Confirmed") { badgeClass = "confirmed"; }
+    if (a.status === "Checked") { badgeClass = "checked"; }
+
+    let actionButton = "";
+    if (a.status === "Confirmed") {
+      actionButton = `<button class="btn btn-danger btn-sm" onclick="adminCancelAppointment(${a.id})">Cancel</button>`;
+    } else {
+      actionButton = `<span class="text-muted" style="font-size:0.83rem;">None</span>`;
+    }
 
     htmlContent += `
     <tr>
@@ -606,6 +665,7 @@ function renderAdminTable(list) {
       <td data-label="Date">${a.date}</td>
       <td data-label="Time">${a.time}</td>
       <td data-label="Status"><span class="badge badge-${badgeClass}">${a.status}</span></td>
+      <td data-label="Action">${actionButton}</td>
     </tr>`;
   }
   tbody.innerHTML = htmlContent;
@@ -637,6 +697,306 @@ function filterAdminTable() {
     }
   }
   renderAdminTable(filtered);
+}
+
+function adminCancelAppointment(id) {
+  if (!confirm("Are you sure you want to cancel this appointment?")) return;
+  
+  const appointments = getData("appointments");
+  for (let i = 0; i < appointments.length; i++) {
+    if (appointments[i].id === id) {
+      appointments[i].status = "Cancelled";
+      break;
+    }
+  }
+  
+  setData("appointments", appointments);
+  showAlert("Appointment cancelled successfully.", "success");
+  initAdminPage();
+}
+
+// --- ADMIN DOCTORS CRUD LOGIC ---
+function renderAdminDoctors() {
+  const grid = document.getElementById("adminDoctorsGrid");
+  if (!grid) return;
+  
+  if (DOCTORS.length === 0) {
+    grid.innerHTML = `<p style="text-align:center; grid-column: 1/-1; padding:20px; color:#64748b;">No doctors registered in the system.</p>`;
+    return;
+  }
+  
+  let htmlContent = "";
+  for (let i = 0; i < DOCTORS.length; i++) {
+    const d = DOCTORS[i];
+    htmlContent += `
+    <div class="doctor-card">
+      <div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div>
+      <div class="doctor-name">${d.name}</div>
+      <div class="doctor-specialty">${d.specialty}</div>
+      <div class="doctor-info">
+        <div>Fee: <strong>Rs. ${d.fee}</strong></div>
+        <div style="font-size:0.83rem; margin-top:8px; color:#64748b; font-style:italic;">${d.bio || "No bio available."}</div>
+        <div style="font-size:0.8rem; margin-top:8px; color:#1a6eb5; font-weight:600;">Slots: ${d.slots.join(", ")}</div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button class="btn btn-secondary btn-sm btn-block" onclick="openEditDoctorModal(${d.id})">Edit</button>
+        <button class="btn btn-danger btn-sm btn-block" onclick="deleteDoctor(${d.id})">Delete</button>
+      </div>
+    </div>`;
+  }
+  grid.innerHTML = htmlContent;
+}
+
+function renderAdminPatients() {
+  const tbody = document.getElementById("patientsTableBody");
+  if (!tbody) return;
+  
+  const users = getData("users");
+  const patients = [];
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].role === "patient") {
+      patients.push(users[i]);
+    }
+  }
+  
+  if (patients.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;padding:20px;color:#64748b;">No registered patients found.</td></tr>`;
+    return;
+  }
+  
+  let htmlContent = "";
+  for (let j = 0; j < patients.length; j++) {
+    const p = patients[j];
+    htmlContent += `
+    <tr>
+      <td data-label="Name">${p.name}</td>
+      <td data-label="Email">${p.email}</td>
+      <td data-label="Phone">${p.phone || "N/A"}</td>
+    </tr>`;
+  }
+  tbody.innerHTML = htmlContent;
+}
+
+function openAddDoctorModal() {
+  document.getElementById("doctorModalTitle").textContent = "Add New Doctor";
+  document.getElementById("editDoctorId").value = "";
+  document.getElementById("docName").value = "";
+  document.getElementById("docSpecialty").value = "Cardiologist";
+  document.getElementById("docFee").value = "";
+  document.getElementById("docBio").value = "";
+  document.getElementById("docSlots").value = "09:00 AM, 10:00 AM, 11:00 AM, 02:00 PM, 03:00 PM";
+  
+  const alertBox = document.getElementById("doctorModalAlert");
+  if (alertBox) {
+    alertBox.className = "alert hidden";
+  }
+  document.getElementById("doctorModal").classList.add("active");
+}
+
+function openEditDoctorModal(id) {
+  let doc = null;
+  for (let i = 0; i < DOCTORS.length; i++) {
+    if (DOCTORS[i].id === id) {
+      doc = DOCTORS[i];
+      break;
+    }
+  }
+  if (!doc) return;
+  
+  document.getElementById("doctorModalTitle").textContent = "Edit Doctor Details";
+  document.getElementById("editDoctorId").value = doc.id;
+  document.getElementById("docName").value = doc.name;
+  document.getElementById("docSpecialty").value = doc.specialty;
+  document.getElementById("docFee").value = doc.fee;
+  document.getElementById("docBio").value = doc.bio || "";
+  document.getElementById("docSlots").value = doc.slots.join(", ");
+  
+  const alertBox = document.getElementById("doctorModalAlert");
+  if (alertBox) {
+    alertBox.className = "alert hidden";
+  }
+  document.getElementById("doctorModal").classList.add("active");
+}
+
+function closeDoctorModal() {
+  document.getElementById("doctorModal").classList.remove("active");
+}
+
+function saveDoctor() {
+  const name = document.getElementById("docName").value.trim();
+  const specialty = document.getElementById("docSpecialty").value;
+  const feeInput = document.getElementById("docFee").value;
+  const bio = document.getElementById("docBio").value.trim();
+  const slotsInput = document.getElementById("docSlots").value.trim();
+  
+  if (!name || !feeInput) {
+    showAlert("Please enter Doctor Name and Consultation Fee.", "error", "doctorModalAlert");
+    return;
+  }
+  
+  const fee = parseInt(feeInput);
+  const slots = slotsInput.split(",").map(s => s.trim()).filter(s => s !== "");
+  
+  const editIdInput = document.getElementById("editDoctorId").value;
+  
+  if (editIdInput === "") {
+    // Add new doctor
+    const newDocId = Date.now();
+    const newDoc = {
+      id: newDocId,
+      name: name,
+      specialty: specialty,
+      fee: fee,
+      bio: bio,
+      slots: slots
+    };
+    DOCTORS.push(newDoc);
+    
+    // Automatically create a doctor login account
+    const users = getData("users");
+    const emailName = name.replace(/\s+/g, "").replace(/Dr\./i, "").toLowerCase();
+    const newDocUser = {
+      id: Date.now() + 1,
+      name: name,
+      email: emailName + "@hospital.com",
+      password: "doc123",
+      role: "doctor",
+      doctorId: newDocId
+    };
+    users.push(newDocUser);
+    setData("users", users);
+  } else {
+    // Update existing doctor
+    const editId = parseInt(editIdInput);
+    for (let i = 0; i < DOCTORS.length; i++) {
+      if (DOCTORS[i].id === editId) {
+        DOCTORS[i].name = name;
+        DOCTORS[i].specialty = specialty;
+        DOCTORS[i].fee = fee;
+        DOCTORS[i].bio = bio;
+        DOCTORS[i].slots = slots;
+        break;
+      }
+    }
+    
+    // Update corresponding user
+    const users = getData("users");
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].role === "doctor" && users[i].doctorId === editId) {
+        users[i].name = name;
+        break;
+      }
+    }
+    setData("users", users);
+  }
+  
+  setData("doctors", DOCTORS);
+  showAlert("Doctor saved successfully!", "success", "doctorModalAlert");
+  setTimeout(function() {
+    closeDoctorModal();
+    initAdminPage();
+  }, 1200);
+}
+
+function deleteDoctor(id) {
+  if (!confirm("Are you sure you want to delete this doctor?")) return;
+  
+  let index = -1;
+  for (let i = 0; i < DOCTORS.length; i++) {
+    if (DOCTORS[i].id === id) {
+      index = i;
+      break;
+    }
+  }
+  
+  if (index !== -1) {
+    DOCTORS.splice(index, 1);
+    setData("doctors", DOCTORS);
+    
+    // Remove corresponding user account
+    const users = getData("users");
+    const filteredUsers = users.filter(u => !(u.role === "doctor" && u.doctorId === id));
+    setData("users", filteredUsers);
+    
+    // Cancel all current appointments booked with this doctor
+    const appointments = getData("appointments");
+    for (let i = 0; i < appointments.length; i++) {
+      if (appointments[i].doctorId === id) {
+        appointments[i].status = "Cancelled";
+      }
+    }
+    setData("appointments", appointments);
+    
+    showAlert("Doctor and associated records deleted successfully.", "success");
+    initAdminPage();
+  }
+}
+
+// --- PATIENT PROFILE UPDATE LOGIC ---
+function openProfileModal() {
+  const user = getSession();
+  if (!user) return;
+  document.getElementById("profileName").value = user.name || "";
+  document.getElementById("profilePhone").value = user.phone || "";
+  document.getElementById("profilePassword").value = "";
+  var alertBox = document.getElementById("profileAlert");
+  if (alertBox) { alertBox.className = "alert hidden"; }
+  document.getElementById("profileModal").classList.add("active");
+}
+
+function closeProfileModal() {
+  document.getElementById("profileModal").classList.remove("active");
+}
+
+function saveProfile() {
+  var user = getSession();
+  if (!user) return;
+
+  var newName = document.getElementById("profileName").value.trim();
+  var newPhone = document.getElementById("profilePhone").value.trim();
+  var newPassword = document.getElementById("profilePassword").value;
+
+  if (!newName) {
+    showAlert("Name cannot be empty.", "error", "profileAlert");
+    return;
+  }
+
+  // Update in users array (localStorage)
+  var users = getData("users");
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].id === user.id) {
+      users[i].name = newName;
+      users[i].phone = newPhone;
+      if (newPassword) {
+        users[i].password = newPassword;
+      }
+      break;
+    }
+  }
+  setData("users", users);
+
+  // Update appointments with the new name
+  var appointments = getData("appointments");
+  for (var j = 0; j < appointments.length; j++) {
+    if (appointments[j].patientId === user.id) {
+      appointments[j].patientName = newName;
+    }
+  }
+  setData("appointments", appointments);
+
+  // Update session
+  user.name = newName;
+  user.phone = newPhone;
+  if (newPassword) {
+    user.password = newPassword;
+  }
+  setSession(user);
+
+  showAlert("Profile updated successfully!", "success", "profileAlert");
+  setTimeout(function() {
+    closeProfileModal();
+    initDashboard();
+  }, 1200);
 }
 
 function logout() {

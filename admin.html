@@ -4,21 +4,32 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Panel — Hospital Appointment System</title>
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body onload="initAdminPage()">
+<body style="background-color: var(--lp-bg); color: var(--lp-text); font-family: 'Inter', sans-serif;" onload="initAdminPage()">
 
-<nav class="navbar">
-  <div class="logo">
-    <i class="fa-solid fa-hospital cross-icon"></i>
-    <span>Hospital <span>Admin</span></span>
-  </div>
-  <div class="nav-links">
-    <a href="admin.html" class="active">Dashboard</a>
-    <button class="btn-nav-logout" onclick="logout()">Logout</button>
-  </div>
-</nav>
+  <!-- Top Navigation Bar -->
+  <header class="lp-header">
+    <nav class="lp-nav">
+      <div class="lp-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+        <span>CarePulse</span>
+      </div>
+      
+      <div class="lp-nav-links">
+        <a class="active" href="admin.html">Admin Dashboard</a>
+      </div>
+      
+      <div class="lp-nav-actions">
+        <button class="lp-btn-login" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+  </header>
 
 <div class="page-header">
 <h1>Admin Panel</h1>
@@ -80,6 +91,7 @@
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="adminTableBody">
@@ -87,20 +99,89 @@
       </table>
     </div>
 
-    <div class="section-title mt-3 mb-2">Doctors in the System</div>
-    <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Sarah Ahmed</div><div class="doctor-specialty">Cardiologist</div><div class="doctor-info">Fee: Rs. 1500</div></div>
-      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Usman Ali</div><div class="doctor-specialty">Neurologist</div><div class="doctor-info">Fee: Rs. 2000</div></div>
-      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Ayesha Khan</div><div class="doctor-specialty">Dermatologist</div><div class="doctor-info">Fee: Rs. 1200</div></div>
-      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Bilal Raza</div><div class="doctor-specialty">Orthopedic</div><div class="doctor-info">Fee: Rs. 1800</div></div>
-      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Nadia Iqbal</div><div class="doctor-specialty">Pediatrician</div><div class="doctor-info">Fee: Rs. 1000</div></div>
-      <div class="doctor-card"><div class="doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="doctor-name">Dr. Kamran Sheikh</div><div class="doctor-specialty">General Physician</div><div class="doctor-info">Fee: Rs. 800</div></div>
+    <div class="flex-between mt-3 mb-2">
+      <div class="section-title">Doctors in the System</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddDoctorModal()">+ Add Doctor</button>
+    </div>
+    <div class="card-grid" id="adminDoctorsGrid"></div>
+
+    <div class="section-title mt-4 mb-2">Registered Patients (Students)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody id="patientsTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-overlay" id="doctorModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeDoctorModal()">✕</button>
+        <h3 id="doctorModalTitle">Add New Doctor</h3>
+        <div id="doctorModalAlert" class="alert hidden"></div>
+        <input type="hidden" id="editDoctorId"/>
+        
+        <div class="form-group">
+          <label for="docName">Doctor Name</label>
+          <input type="text" id="docName" placeholder="Dr. John Doe"/>
+        </div>
+        
+        <div class="form-group">
+          <label for="docSpecialty">Specialty</label>
+          <select id="docSpecialty">
+            <option value="Cardiologist">Cardiologist</option>
+            <option value="Neurologist">Neurologist</option>
+            <option value="Dermatologist">Dermatologist</option>
+            <option value="Orthopedic">Orthopedic</option>
+            <option value="Pediatrician">Pediatrician</option>
+            <option value="General Physician">General Physician</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="docFee">Consultation Fee (Rs.)</label>
+          <input type="number" id="docFee" placeholder="1500"/>
+        </div>
+        
+        <div class="form-group">
+          <label for="docBio">Short Bio / Description</label>
+          <input type="text" id="docBio" placeholder="e.g. 10 years experience..."/>
+        </div>
+        
+        <div class="form-group">
+          <label for="docSlots">Available Slots (Comma-separated)</label>
+          <input type="text" id="docSlots" placeholder="09:00 AM, 10:00 AM, 11:30 AM, 02:00 PM"/>
+        </div>
+        
+        <button class="btn btn-success btn-block" onclick="saveDoctor()">Save Doctor ✅</button>
+      </div>
+    </div>
 
   </div>
 </div>
 
-<footer class="footer">
-  &copy; 2026 <span>Hospital Appointment System</span> — Built with HTML, CSS & JavaScript
-</footer>
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <div class="lp-footer-grid" style="grid-template-columns: 1fr;">
+      <div class="lp-footer-brand">
+        <div class="lp-footer-brand-title">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+          <span>CarePulse</span>
+        </div>
+        <p class="lp-footer-brand-desc">Providing world-class healthcare management solutions with compassion and technological excellence.</p>
+      </div>
+    </div>
+    
+    <div class="lp-footer-bottom">
+      <p>© 2024 CarePulse Health Systems. All rights reserved.</p>
+    </div>
+  </footer>
 
 <script src="js/app.js"></script>
 </body>

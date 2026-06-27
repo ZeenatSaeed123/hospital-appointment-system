@@ -1,48 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login — Hospital Appointment System</title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>CarePulse Provider Portal | Secure Login</title>
+  
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
+  <!-- Main Custom Stylesheet -->
   <link rel="stylesheet" href="css/style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body>
+<body class="auth-body">
 
-<div class="auth-wrapper">
-  <div class="auth-box">
-
-    <div class="auth-logo">
-      <i class="fa-solid fa-hospital cross"></i>
-      <h2>Hospital Appointment System</h2>
-      <p>Sign in to your account</p>
-    </div>
-
-    <div id="alertBox" class="alert hidden"></div>
-
-
-    <form id="loginForm" novalidate onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" placeholder="Enter your email" />
-        <span class="error-msg" id="emailError"></span>
+  <header class="lp-header">
+    <nav class="lp-nav">
+      <div class="lp-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+        <span>CarePulse</span>
       </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter your password" />
-        <span class="error-msg" id="passError"></span>
+      
+      <div class="lp-nav-links">
       </div>
+      
+      <div class="lp-nav-actions">
+        <button class="lp-btn-appointment" onclick="window.location.href='register.html'">Create Account</button>
+      </div>
+    </nav>
+  </header>
 
-      <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-    </form>
-
-    <div class="auth-switch">
-      Don't have an account? <a href="register.html">Create one here</a>
+  <!-- Main Split Page -->
+  <main class="auth-main">
+    
+    <!-- Left Side: Visual/Branding -->
+    <div class="auth-visual">
+      <!-- Decorative Background Element -->
+      <div class="auth-visual-grid">
+        <svg height="100%" preserveaspectratio="none" viewbox="0 0 100 100" width="100%">
+          <defs>
+            <pattern height="10" id="grid" patternunits="userSpaceOnUse" width="10">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"></path>
+            </pattern>
+          </defs>
+          <rect fill="url(#grid)" height="100%" width="100%"></rect>
+        </svg>
+      </div>
+      
+      <div class="auth-visual-content">
+        <div class="auth-visual-icon">
+          <span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1;">diversity_4</span>
+        </div>
+        <h2 class="auth-visual-title">Advancing Care through Seamless Coordination</h2>
+        <p class="auth-visual-desc">
+          Access real-time patient analytics, clinical decision support tools, and integrated scheduling designed to empower the modern medical provider.
+        </p>
+        
+        <div class="auth-visual-stats">
+          <div class="auth-visual-stat-box">
+            <div class="auth-visual-stat-num">500+</div>
+            <div class="auth-visual-stat-label">Medical Centers</div>
+          </div>
+          <div class="auth-visual-stat-box">
+            <div class="auth-visual-stat-num">99.9%</div>
+            <div class="auth-visual-stat-label">Uptime Reliability</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Graphic Illustration -->
+      <div class="auth-visual-illustration">
+        <img alt="Modern clinic reception area" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvXY03g_Ksu8RYOPfYw0h6t-gxvJclRinL11TpC2JAe6q7J7UQ4-ysfuGys9EaXAdWxuNgPBMZpBJf5Rsu_-ilPlQOdYqu9_xSsSiyGjG7fDO-d75VV6sl_CVWfUCTHt94wNXrxxrR6m6EgLhMh8Egq-CN4ra6I68DzayS6uMAJi3P3sMq6Mx5kVkDZxELJdPODRItHQ6gFehN2RYZRd8kR_bQWKPsrqQYwKoyBb3XrHpqUT2m0AFTp_i6awj9t42Pc_W3CZ0vfn_S"/>
+      </div>
     </div>
-  </div>
-</div>
+    
+    <!-- Right Side: Login Form -->
+    <div class="auth-form-side">
+      <div class="auth-form-card">
+        
+        <!-- Portal Brand Header -->
+        <div class="auth-form-header">
+          <div class="auth-form-header-icon">
+            <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+          </div>
+          <h3 class="auth-form-title">Provider Portal</h3>
+          <p class="auth-form-subtitle">Welcome back. Please sign in to your secure clinical account.</p>
+        </div>
+        
+        <!-- Dynamic Alert Container -->
+        <div id="alertBox" class="alert hidden"></div>
+        
+        <!-- Form -->
+        <form id="loginForm" novalidate onsubmit="handleLogin(event)">
+          
+          <!-- Email Field -->
+          <div class="auth-field">
+            <label for="email">Email Address</label>
+            <div class="auth-input-icon-wrapper" id="emailWrapper">
+              <span class="material-symbols-outlined auth-input-icon">mail</span>
+              <input class="auth-input-field" id="email" name="email" placeholder="name@medicalcenter.com" required="" type="email" onfocus="document.getElementById('emailWrapper').classList.add('is-focused')" onblur="document.getElementById('emailWrapper').classList.remove('is-focused')"/>
+            </div>
+            <span class="error-msg" id="emailError"></span>
+          </div>
+          
+          <!-- Password Field -->
+          <div class="auth-field">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label style="margin-bottom: 0;" for="password">Password</label>
+            </div>
+            <div class="auth-input-icon-wrapper" id="passWrapper">
+              <span class="material-symbols-outlined auth-input-icon">lock</span>
+              <input class="auth-input-field" id="password" name="password" placeholder="••••••••••••" required="" type="password" onfocus="document.getElementById('passWrapper').classList.add('is-focused')" onblur="document.getElementById('passWrapper').classList.remove('is-focused')"/>
+              <button class="auth-input-toggle-btn" onclick="togglePasswordVisibility()" type="button">
+                <span class="material-symbols-outlined" id="eye-icon">visibility</span>
+              </button>
+            </div>
+            <span class="error-msg" id="passError"></span>
+          </div>
+          
+          
+          <!-- Sign In Button -->
+          <button class="auth-btn-submit" type="submit">
+            Sign In to Secure Portal
+          </button>
+        </form>
+        
+        <!-- Switch to Signup -->
+        <div class="auth-switch-prompt">
+          Don't have an account? <a href="register.html">Create one here</a>
+        </div>
+        
+        <!-- Trust Badge -->
+        <div class="auth-trust-badge">
+          <div class="auth-secure-tag">
+            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+            <span>Secure Provider Network</span>
+          </div>
+          <p class="auth-trust-text">
+            Protected by 256-bit HIPAA-compliant encryption. Your clinical data and session activity are monitored for security.
+          </p>
+        </div>
+        
+      </div>
+    </div>
+    
+  </main>
 
-<script src="js/app.js"></script>
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <div class="lp-footer-grid" style="grid-template-columns: 1fr;">
+      <div class="lp-footer-brand">
+        <div class="lp-footer-brand-title">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+          <span>CarePulse</span>
+        </div>
+        <p class="lp-footer-brand-desc">Providing world-class healthcare management solutions with compassion and technological excellence.</p>
+      </div>
+    </div>
+    
+    <div class="lp-footer-bottom">
+      <p>© 2024 CarePulse Health Systems. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- App logic scripts -->
+  <script src="js/app.js"></script>
+  <script>
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eye-icon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.textContent = 'visibility_off';
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.textContent = 'visibility';
+      }
+    }
+  </script>
+
 </body>
 </html>

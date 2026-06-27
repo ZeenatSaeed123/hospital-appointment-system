@@ -1,65 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register — Hospital Appointment System</title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>CarePulse Patient Portal | Create Account</title>
+  
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
+  <!-- Main Custom Stylesheet -->
   <link rel="stylesheet" href="css/style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body>
+<body class="auth-body">
 
-<div class="auth-wrapper">
-  <div class="auth-box">
-
-    <div class="auth-logo">
-      <i class="fa-solid fa-hospital cross-icon"></i>
-      <h2>Create Account</h2>
-      <p>Register as a patient</p>
-    </div>
-
-    <div id="alertBox" class="alert hidden"></div>
-
-    <form id="registerForm" novalidate onsubmit="handleRegister(event)">
-      <div class="form-group">
-        <label for="regName">Full Name</label>
-        <input type="text" id="regName" placeholder="Enter your full name"/>
-        <span class="error-msg" id="nameError"></span>
+  <header class="lp-header">
+    <nav class="lp-nav">
+      <div class="lp-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+        <span>CarePulse</span>
       </div>
-
-      <div class="form-group">
-        <label for="regEmail">Email Address</label>
-        <input type="email" id="regEmail" placeholder="Enter your email"/>
-        <span class="error-msg" id="regEmailError"></span>
+      
+      <div class="lp-nav-links">
       </div>
-
-      <div class="form-group">
-        <label for="regPhone">Phone Number (optional)</label>
-        <input type="text" id="regPhone" placeholder="e.g. 0300-1234567"/>
+      
+      <div class="lp-nav-actions">
+        <button class="lp-btn-appointment" onclick="window.location.href='login.html'">Sign In</button>
       </div>
+    </nav>
+  </header>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="regPass">Password</label>
-          <input type="password" id="regPass" placeholder="Create password"/>
-          <span class="error-msg" id="regPassError"></span>
+  <!-- Main Split Page -->
+  <main class="auth-main">
+    
+    <!-- Left Side: Visual/Branding -->
+    <div class="auth-visual">
+      <!-- Decorative Background Element -->
+      <div class="auth-visual-grid">
+        <svg height="100%" preserveaspectratio="none" viewbox="0 0 100 100" width="100%">
+          <defs>
+            <pattern height="10" id="grid" patternunits="userSpaceOnUse" width="10">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"></path>
+            </pattern>
+          </defs>
+          <rect fill="url(#grid)" height="100%" width="100%"></rect>
+        </svg>
+      </div>
+      
+      <div class="auth-visual-content">
+        <div class="auth-visual-icon">
+          <span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1;">diversity_4</span>
         </div>
-        <div class="form-group">
-          <label for="regConfirm">Confirm Password</label>
-          <input type="password" id="regConfirm" placeholder="Repeat password"/>
-          <span class="error-msg" id="confirmError"></span>
+        <h2 class="auth-visual-title">Advancing Care through Seamless Coordination</h2>
+        <p class="auth-visual-desc">
+          Access real-time patient analytics, clinical decision support tools, and integrated scheduling designed to empower the modern medical provider.
+        </p>
+        
+        <div class="auth-visual-stats">
+          <div class="auth-visual-stat-box">
+            <div class="auth-visual-stat-num">500+</div>
+            <div class="auth-visual-stat-label">Medical Centers</div>
+          </div>
+          <div class="auth-visual-stat-box">
+            <div class="auth-visual-stat-num">99.9%</div>
+            <div class="auth-visual-stat-label">Uptime Reliability</div>
+          </div>
         </div>
       </div>
-
-      <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-    </form>
-
-    <div class="auth-switch">
-      Already have an account? <a href="login.html">Sign in here</a>
+      
+      <!-- Graphic Illustration -->
+      <div class="auth-visual-illustration">
+        <img alt="Modern clinic reception area" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvXY03g_Ksu8RYOPfYw0h6t-gxvJclRinL11TpC2JAe6q7J7UQ4-ysfuGys9EaXAdWxuNgPBMZpBJf5Rsu_-ilPlQOdYqu9_xSsSiyGjG7fDO-d75VV6sl_CVWfUCTHt94wNXrxxrR6m6EgLhMh8Egq-CN4ra6I68DzayS6uMAJi3P3sMq6Mx5kVkDZxELJdPODRItHQ6gFehN2RYZRd8kR_bQWKPsrqQYwKoyBb3XrHpqUT2m0AFTp_i6awj9t42Pc_W3CZ0vfn_S"/>
+      </div>
     </div>
-  </div>
-</div>
+    
+    <!-- Right Side: Register Form -->
+    <div class="auth-form-side">
+      <div class="auth-form-card" style="max-width: 500px;">
+        
+        <!-- Patient Header -->
+        <div class="auth-form-header">
+          <div class="auth-form-header-icon">
+            <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">person_add</span>
+          </div>
+          <h3 class="auth-form-title">Create Account</h3>
+          <p class="auth-form-subtitle">Register as a patient to start booking appointments.</p>
+        </div>
+        
+        <!-- Dynamic Alert Container -->
+        <div id="alertBox" class="alert hidden"></div>
+        
+        <!-- Form -->
+        <form id="registerForm" novalidate onsubmit="handleRegister(event)">
+          
+          <!-- Full Name Field -->
+          <div class="auth-field">
+            <label for="regName">Full Name</label>
+            <div class="auth-input-icon-wrapper" id="nameWrapper">
+              <span class="material-symbols-outlined auth-input-icon">person</span>
+              <input class="auth-input-field" id="regName" placeholder="Enter your full name" required="" type="text" onfocus="document.getElementById('nameWrapper').classList.add('is-focused')" onblur="document.getElementById('nameWrapper').classList.remove('is-focused')"/>
+            </div>
+            <span class="error-msg" id="nameError"></span>
+          </div>
+          
+          <!-- Email Field -->
+          <div class="auth-field">
+            <label for="regEmail">Email Address</label>
+            <div class="auth-input-icon-wrapper" id="emailWrapper">
+              <span class="material-symbols-outlined auth-input-icon">mail</span>
+              <input class="auth-input-field" id="regEmail" placeholder="name@example.com" required="" type="email" onfocus="document.getElementById('emailWrapper').classList.add('is-focused')" onblur="document.getElementById('emailWrapper').classList.remove('is-focused')"/>
+            </div>
+            <span class="error-msg" id="regEmailError"></span>
+          </div>
+          
+          <!-- Phone Field -->
+          <div class="auth-field">
+            <label for="regPhone">Phone Number (Optional)</label>
+            <div class="auth-input-icon-wrapper" id="phoneWrapper">
+              <span class="material-symbols-outlined auth-input-icon">call</span>
+              <input class="auth-input-field" id="regPhone" placeholder="e.g. 0300-1234567" type="text" onfocus="document.getElementById('phoneWrapper').classList.add('is-focused')" onblur="document.getElementById('phoneWrapper').classList.remove('is-focused')"/>
+            </div>
+          </div>
+          
+          <!-- Password & Confirm Password (flex row) -->
+          <div class="auth-flex-row">
+            <div class="auth-field">
+              <label for="regPass">Password</label>
+              <div class="auth-input-icon-wrapper" id="passWrapper">
+                <span class="material-symbols-outlined auth-input-icon">lock</span>
+                <input class="auth-input-field" id="regPass" placeholder="Create password" required="" type="password" onfocus="document.getElementById('passWrapper').classList.add('is-focused')" onblur="document.getElementById('passWrapper').classList.remove('is-focused')"/>
+              </div>
+              <span class="error-msg" id="regPassError"></span>
+            </div>
+            
+            <div class="auth-field">
+              <label for="regConfirm">Confirm Password</label>
+              <div class="auth-input-icon-wrapper" id="confirmWrapper">
+                <span class="material-symbols-outlined auth-input-icon">lock_reset</span>
+                <input class="auth-input-field" id="regConfirm" placeholder="Repeat password" required="" type="password" onfocus="document.getElementById('confirmWrapper').classList.add('is-focused')" onblur="document.getElementById('confirmWrapper').classList.remove('is-focused')"/>
+              </div>
+              <span class="error-msg" id="confirmError"></span>
+            </div>
+          </div>
+          
+          <!-- Create Account Button -->
+          <button class="auth-btn-submit" type="submit" style="margin-top: 8px;">
+            Create Patient Account
+          </button>
+        </form>
+        
+        <!-- Switch to Signin -->
+        <div class="auth-switch-prompt">
+          Already have an account? <a href="login.html">Sign in here</a>
+        </div>
+        
+        <!-- Trust Badge -->
+        <div class="auth-trust-badge">
+          <div class="auth-secure-tag">
+            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+            <span>Secure Patient Portal</span>
+          </div>
+          <p class="auth-trust-text">
+            Protected by 256-bit HIPAA-compliant encryption. Your health records and credentials are saved securely.
+          </p>
+        </div>
+        
+      </div>
+    </div>
+    
+  </main>
 
-<script src="js/app.js"></script>
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <div class="lp-footer-grid" style="grid-template-columns: 1fr;">
+      <div class="lp-footer-brand">
+        <div class="lp-footer-brand-title">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+          <span>CarePulse</span>
+        </div>
+        <p class="lp-footer-brand-desc">Providing world-class healthcare management solutions with compassion and technological excellence.</p>
+      </div>
+    </div>
+    
+    <div class="lp-footer-bottom">
+      <p>© 2024 CarePulse Health Systems. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- App logic scripts -->
+  <script src="js/app.js"></script>
+
 </body>
 </html>

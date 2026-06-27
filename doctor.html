@@ -5,22 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Doctor Dashboard — Hospital Appointment System</title>
 
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body onload="initDoctorPage()">
+<body style="background-color: var(--lp-bg); color: var(--lp-text); font-family: 'Inter', sans-serif;" onload="initDoctorPage()">
 
-<nav class="navbar">
-  <div class="logo">
-    <i class="fa-solid fa-hospital cross-icon"></i>
-    <span>Hospital <span>System</span></span>
-  </div>
-
-  <div class="nav-links">
-    <a href="doctor.html" class="active">My Schedule</a>
-    <button class="btn-nav-logout" onclick="logout()">Logout</button>
-  </div>
-</nav>
+  <!-- Top Navigation Bar -->
+  <header class="lp-header">
+    <nav class="lp-nav">
+      <div class="lp-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+        <span>CarePulse</span>
+      </div>
+      
+      <div class="lp-nav-links">
+        <a class="active" href="doctor.html">My Schedule</a>
+      </div>
+      
+      <div class="lp-nav-actions">
+        <button class="lp-btn-login" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+  </header>
 
 <div class="page-header">
   <i class="fa-solid fa-user-doctor"></i>
@@ -57,7 +67,20 @@
         </div>
       </div>
 
+      <div class="stat-card">
+        <div class="stat-icon yellow">
+          <i class="fa-solid fa-clipboard-check"></i>
+        </div>
+
+        <div>
+          <div class="stat-value" id="checkedCount">0</div>
+          <div class="stat-label">Checked / Completed</div>
+        </div>
+      </div>
+
     </div>
+
+    <div id="alertBox" class="alert hidden"></div>
 
     <div class="section-title mb-2">
       My Appointment Schedule
@@ -71,6 +94,7 @@
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
 
@@ -83,9 +107,22 @@
   </div>
 </div>
 
-<footer class="footer">
-  &copy; 2026 <span>Hospital Appointment System</span>
-</footer>
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <div class="lp-footer-grid" style="grid-template-columns: 1fr;">
+      <div class="lp-footer-brand">
+        <div class="lp-footer-brand-title">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_metrics</span>
+          <span>CarePulse</span>
+        </div>
+        <p class="lp-footer-brand-desc">Providing world-class healthcare management solutions with compassion and technological excellence.</p>
+      </div>
+    </div>
+    
+    <div class="lp-footer-bottom">
+      <p>© 2024 CarePulse Health Systems. All rights reserved.</p>
+    </div>
+  </footer>
 
 <script src="js/app.js"></script>
 
